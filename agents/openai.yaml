@@ -1,0 +1,3 @@
+display_name: GitHub Review Workplan
+short_description: File-backed GitHub review planning.
+default_prompt: Create a file-backed review workplan for the current GitHub PR.
