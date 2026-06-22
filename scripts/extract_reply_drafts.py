@@ -5,62 +5,14 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 from pathlib import Path
 
-
-HEADING_RE = re.compile(r"^###\s+`?(\d+)`?\s*$")
-FENCE_RE = re.compile(r"^```(?:text)?\s*$")
+from gh_review_workplan.markdown import extract_fenced_drafts
 
 
 def extract_reply_drafts(markdown: str) -> list[dict[str, str]]:
-    lines = markdown.splitlines()
-    in_reply_section = False
-    current_id: str | None = None
-    collecting = False
-    body: list[str] = []
-    drafts: list[dict[str, str]] = []
-
-    def flush() -> None:
-        nonlocal current_id, body
-        if current_id and body:
-            drafts.append({"comment_id": current_id, "body": "\n".join(body).strip()})
-        body = []
-
-    for line in lines:
-        if line.startswith("## "):
-            if in_reply_section:
-                if collecting:
-                    flush()
-                break
-            in_reply_section = line.strip() == "## Reply Drafts"
-            continue
-
-        if not in_reply_section:
-            continue
-
-        match = HEADING_RE.match(line)
-        if match:
-            if collecting:
-                flush()
-            current_id = match.group(1)
-            collecting = False
-            body = []
-            continue
-
-        if current_id and FENCE_RE.match(line):
-            if collecting:
-                flush()
-                collecting = False
-                current_id = None
-            else:
-                collecting = True
-            continue
-
-        if collecting:
-            body.append(line)
-
-    return drafts
+    drafts = extract_fenced_drafts(markdown, "Reply Drafts", "comment_id")
+    return [{"comment_id": draft["comment_id"], "body": draft["body"]} for draft in drafts]
 
 
 def main() -> int:
