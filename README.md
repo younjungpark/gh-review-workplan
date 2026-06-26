@@ -38,18 +38,31 @@ It is useful for:
 - `scripts/submit_review_drafts.py` - dry-run or create a pending/submitted PR review
 - `references/github-review-api.md` - GitHub review API notes
 
+## Prerequisites
+
+This skill is implemented with local Python helper scripts that call the GitHub CLI (`gh`). It does not require or call a Codex-specific GitHub plugin, GitHub connector, or MCP server.
+
+Before using the GitHub fetch/post helpers, make sure `gh` is installed and authenticated:
+
+```bash
+gh --version
+gh auth status
+```
+
+If `gh auth status` is not authenticated, run:
+
+```bash
+gh auth login
+```
+
+The skill expects the authenticated account to have permission to read the target repository and, for `--apply` operations, permission to write PR reviews or review-comment replies.
+
 ## Installation
 
 Copy or install this folder into a Codex skills directory, such as:
 
 ```bash
 ~/.codex/skills/gh-review-workplan
-```
-
-The helper scripts expect the GitHub CLI (`gh`) to be installed and authenticated for GitHub API access.
-
-```bash
-gh auth status
 ```
 
 ## Quick Start: outgoing PR review
