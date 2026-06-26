@@ -33,7 +33,7 @@ Shared steps:
 
 Incoming response mode:
 
-1. Fetch thread-aware review data with GraphQL or the GitHub connector; do not rely only on flat REST comments for unresolved/outdated state.
+1. Fetch thread-aware review data with GitHub GraphQL via `gh api graphql`; do not rely only on flat REST comments for unresolved/outdated state.
 2. Use `templates/review-plan.md`.
 3. Exclude resolved, outdated, duplicate, or already-answered comments from the active plan.
 4. Track each active comment by `comment_id`, URL, path, line, status, and analysis.
